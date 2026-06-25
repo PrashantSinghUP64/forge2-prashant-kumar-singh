@@ -6,6 +6,8 @@ export default function CardModal({ card, board, allTags, allMembers, onClose, o
   const [listId, setListId] = useState(card.listId);
   const [tagId, setTagId] = useState('');
   const [memberId, setMemberId] = useState('');
+  const [dueDate, setDueDate] = useState(card.due_date ? card.due_date.split('T')[0] : '');
+  const [savingDueDate, setSavingDueDate] = useState(false);
 
   const moveCard = async (e) => {
     const newListId = e.target.value;
@@ -38,6 +40,18 @@ export default function CardModal({ card, board, allTags, allMembers, onClose, o
     }
   };
 
+  const saveDueDate = async () => {
+    setSavingDueDate(true);
+    try {
+      await api.patch(`/cards/${card.id}/due-date`, { due_date: dueDate || null });
+      onUpdate();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSavingDueDate(false);
+    }
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="glass-panel modal-content" onClick={e => e.stopPropagation()}>
@@ -53,6 +67,21 @@ export default function CardModal({ card, board, allTags, allMembers, onClose, o
               <option key={list.id} value={list.id}>{list.title}</option>
             ))}
           </select>
+        </div>
+
+        <div className="form-group">
+          <label>Due Date</label>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <input
+              type="date"
+              value={dueDate}
+              onChange={e => setDueDate(e.target.value)}
+              style={{ flex: 1 }}
+            />
+            <button onClick={saveDueDate} className="btn-secondary" disabled={savingDueDate}>
+              {savingDueDate ? 'Saving...' : 'Save'}
+            </button>
+          </div>
         </div>
 
         <div className="form-group">
@@ -87,12 +116,14 @@ export default function CardModal({ card, board, allTags, allMembers, onClose, o
           </div>
         </div>
 
-        <div className="form-group" style={{ marginTop: '1rem' }}>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-            Due Date: {card.due_date ? new Date(card.due_date).toLocaleDateString() : 'None'}
-          </p>
-        </div>
+        {card.description && (
+          <div className="form-group">
+            <label>Description</label>
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', margin: 0 }}>{card.description}</p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
+

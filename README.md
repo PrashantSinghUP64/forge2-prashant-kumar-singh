@@ -25,4 +25,5 @@ npm run dev
 ```
 
 ## Live URL
-*(To be added after deployment)*
+- **Frontend:** https://forge2-prashant-kumar-singh-nv6r84gt8.vercel.app/
+- **Backend API:** https://forge2-qualifier-prashant-kumar-singh-production.up.railway.app/api
