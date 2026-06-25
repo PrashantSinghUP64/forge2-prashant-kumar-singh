@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
         $tagBug = Tag::create(['name' => 'Bug', 'color' => '#ef4444']);
         $tagFeature = Tag::create(['name' => 'Feature', 'color' => '#3b82f6']);
 
-        $member1 = Member::create(['name' => 'Prashant', 'avatar' => 'https://ui-avatars.com/api/?name=Prashant']);
-        $member2 = Member::create(['name' => 'Ayush', 'avatar' => 'https://ui-avatars.com/api/?name=Ayush']);
+        $member1 = Member::create(['name' => 'Prashant', 'avatar' => 'https://ui-avatars.com/api/?name=Prashant&background=3b82f6&color=fff']);
+        $member2 = Member::create(['name' => 'Ayush', 'avatar' => 'https://ui-avatars.com/api/?name=Ayush&background=8b5cf6&color=fff']);
 
         $card1 = Card::create([
             'kanban_list_id' => $todo->id,
@@ -39,12 +39,12 @@ class DatabaseSeeder extends Seeder
             'kanban_list_id' => $inProgress->id,
             'title' => 'Fix Hermes Memory',
             'description' => 'Memory is not persisting across sessions',
-            'due_date' => now()->subDays(1), // Overdue!
+            'due_date' => now()->subDays(1),
             'position' => 0
         ]);
         $card2->tags()->attach($tagBug);
         $card2->members()->attach($member2);
-        
+
         $card3 = Card::create([
             'kanban_list_id' => $done->id,
             'title' => 'Register for Forge 2',

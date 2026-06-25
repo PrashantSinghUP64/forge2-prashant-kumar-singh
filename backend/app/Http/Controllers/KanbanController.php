@@ -60,6 +60,16 @@ class KanbanController extends Controller
         return response()->json(['status' => 'success']);
     }
 
+    public function updateDueDate(Request $request, $cardId)
+    {
+        $card = Card::findOrFail($cardId);
+        $data = $request->validate([
+            'due_date' => 'nullable|date'
+        ]);
+        $card->update($data);
+        return response()->json(['status' => 'success', 'due_date' => $card->due_date]);
+    }
+
     public function getTags()
     {
         return Tag::all();
@@ -77,16 +87,6 @@ class KanbanController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    public function updateDueDate(Request $request, $cardId)
-    {
-        $card = Card::findOrFail($cardId);
-        $data = $request->validate([
-            'due_date' => 'nullable|date'
-        ]);
-        $card->update($data);
-        return response()->json(['status' => 'success', 'due_date' => $card->due_date]);
-    }
-
     public function assignMember(Request $request, $cardId)
     {
         $card = Card::findOrFail($cardId);
@@ -96,14 +96,13 @@ class KanbanController extends Controller
 
     public function seed()
     {
-        // Only seed if empty
-        if (\App\Models\Tag::count() === 0) {
+        if (Tag::count() === 0) {
             Tag::create(['name' => 'Bug', 'color' => '#ef4444']);
             Tag::create(['name' => 'Feature', 'color' => '#3b82f6']);
             Tag::create(['name' => 'Enhancement', 'color' => '#8b5cf6']);
             Tag::create(['name' => 'Urgent', 'color' => '#f97316']);
         }
-        if (\App\Models\Member::count() === 0) {
+        if (Member::count() === 0) {
             Member::create(['name' => 'Prashant', 'avatar' => 'https://ui-avatars.com/api/?name=Prashant&background=3b82f6&color=fff']);
             Member::create(['name' => 'Ayush', 'avatar' => 'https://ui-avatars.com/api/?name=Ayush&background=8b5cf6&color=fff']);
             Member::create(['name' => 'Rahul', 'avatar' => 'https://ui-avatars.com/api/?name=Rahul&background=ef4444&color=fff']);

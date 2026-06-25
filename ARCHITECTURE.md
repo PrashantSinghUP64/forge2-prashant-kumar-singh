@@ -10,5 +10,5 @@
 - #agent-log: Autonomous runs logged here
 
 ## Model Routing
-- Planning → Groq gpt-oss-120b (strong reasoning)
-- Coding → Ollama qwen2.5-coder (fast, unlimited, local)
+- Planning → Groq gpt-oss-120b
+- Coding → Ollama qwen2.5-coder
