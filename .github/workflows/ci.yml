@@ -1,0 +1,53 @@
+name: CI — Kanban API Tests
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  test:
+    name: PHPUnit Feature Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pdo_sqlite, sqlite3, mbstring, bcmath, gd
+          coverage: none
+
+      - name: Install Composer dependencies
+        working-directory: backend
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Copy .env for testing
+        working-directory: backend
+        run: cp .env.example .env
+
+      - name: Generate application key
+        working-directory: backend
+        run: php artisan key:generate
+
+      - name: Create SQLite test database
+        working-directory: backend
+        run: |
+          touch database/database.sqlite
+          php artisan migrate --force
+
+      - name: Run PHPUnit tests
+        working-directory: backend
+        run: php artisan test --stop-on-failure
+
+      - name: Health check (smoke test)
+        working-directory: backend
+        run: |
+          php artisan serve --port=8000 &
+          sleep 3
+          curl -sf http://localhost:8000/api/health || (echo "Health check FAILED" && exit 1)
+          echo "✅ Health check passed"

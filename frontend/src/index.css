@@ -244,3 +244,38 @@ input:focus, textarea:focus, select:focus {
   height: 24px;
   border-radius: 50%;
 }
+
+.modal-title-input {
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 6px 10px;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+  transition: border-color 0.2s;
+}
+
+.modal-title-input:focus {
+  border-color: var(--accent-color);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+textarea {
+  font-family: inherit;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 6px;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+textarea:focus {
+  border-color: var(--accent-color);
+}
+

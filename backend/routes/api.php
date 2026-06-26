@@ -20,3 +20,10 @@ Route::post('/cards/{card}/tags', [KanbanController::class, 'assignTag']);
 Route::post('/cards/{card}/members', [KanbanController::class, 'assignMember']);
 
 Route::get('/seed', [KanbanController::class, 'seed']);
+
+Route::patch('/cards/{card}', [KanbanController::class, 'updateCard']);
+Route::delete('/cards/{card}', [KanbanController::class, 'deleteCard']);
+Route::delete('/cards/{card}/tags/{tag}', [KanbanController::class, 'removeTag']);
+Route::delete('/cards/{card}/members/{member}', [KanbanController::class, 'removeMember']);
+
+Route::get('/health', fn() => response()->json(['status' => 'ok', 'time' => now()]));

@@ -23,7 +23,8 @@ class KanbanController extends Controller
 
     public function createBoard(Request $request)
     {
-        return Board::create($request->validate(['title' => 'required|string']));
+        $board = Board::create($request->validate(['title' => 'required|string']));
+        return response()->json($board, 201);
     }
 
     public function createList(Request $request, $boardId)
@@ -33,7 +34,7 @@ class KanbanController extends Controller
             'position' => 'integer'
         ]);
         $data['board_id'] = $boardId;
-        return KanbanList::create($data);
+        return response()->json(KanbanList::create($data), 201);
     }
 
     public function createCard(Request $request, $listId)
@@ -46,7 +47,7 @@ class KanbanController extends Controller
         ]);
         $data['kanban_list_id'] = $listId;
         $card = Card::create($data);
-        return $card->load('tags', 'members');
+        return response()->json($card->load('tags', 'members'), 201);
     }
 
     public function moveCard(Request $request, $cardId)
@@ -92,6 +93,38 @@ class KanbanController extends Controller
         $card = Card::findOrFail($cardId);
         $card->members()->syncWithoutDetaching([$request->member_id]);
         return response()->json(['status' => 'success']);
+    }
+
+    public function updateCard(Request $request, $cardId)
+    {
+        $card = Card::findOrFail($cardId);
+        $data = $request->validate([
+            'title'       => 'sometimes|required|string',
+            'description' => 'nullable|string',
+        ]);
+        $card->update($data);
+        return $card->load('tags', 'members');
+    }
+
+    public function deleteCard($cardId)
+    {
+        $card = Card::findOrFail($cardId);
+        $card->delete();
+        return response()->json(['status' => 'deleted']);
+    }
+
+    public function removeTag($cardId, $tagId)
+    {
+        $card = Card::findOrFail($cardId);
+        $card->tags()->detach($tagId);
+        return response()->json(['status' => 'removed']);
+    }
+
+    public function removeMember($cardId, $memberId)
+    {
+        $card = Card::findOrFail($cardId);
+        $card->members()->detach($memberId);
+        return response()->json(['status' => 'removed']);
     }
 
     public function seed()
