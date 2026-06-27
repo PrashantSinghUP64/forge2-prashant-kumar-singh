@@ -101,6 +101,7 @@ class KanbanController extends Controller
         $data = $request->validate([
             'title'       => 'sometimes|required|string',
             'description' => 'nullable|string',
+            'due_date'    => 'nullable|date',
         ]);
         $card->update($data);
         return $card->load('tags', 'members');
